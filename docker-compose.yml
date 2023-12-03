@@ -2,8 +2,10 @@ version: '3'
 services:
   nginx-reverse-proxy:
     build: .
-    container_name: jellyfin-proxy
+    container_name: docker-proxy
+    restart: unless-stopped
     ports:
       - "60000:60000"
+      - "60001:60001"
     environment:
-      - PROXY_PASS_TARGET=192.168.178.33:8096
+      - PROXY_PASS_TARGET=192.168.178.33
