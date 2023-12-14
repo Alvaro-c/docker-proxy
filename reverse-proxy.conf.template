@@ -1,8 +1,9 @@
 # Uncomment the commented sections after you have acquired a SSL Certificate
 server {
     # Jellyfin
-    listen 60000;
-    listen [::]:60000;
+    listen 3020;
+    listen [::]:3020;
+
     server_name jellyfin;
     ## The default `client_max_body_size` is 1M, this might not be enough for some posters, etc.
     client_max_body_size 20M;
@@ -79,28 +80,9 @@ server {
 }
 
 server {
-    listen 60001;
-    server_name django;
-
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-
-    location /dashboard/ {
-        proxy_pass http://${PROXY_PASS_TARGET}:60001/;
-        proxy_redirect default;
-        proxy_redirect ~^/(.*)$ /dashboard/$1;
-    }
-    location / {
-        proxy_pass http://${PROXY_PASS_TARGET}:8001/;
-    }
-}
-
-server {
-    listen 60003;
-    listen [::]:60003;
-    server_name deluge;
+    listen 3021;
+    listen [::]:3021;
+    server_name dashboard;
 
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -108,12 +90,13 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
 
     location / {
-        proxy_pass http://${PROXY_PASS_TARGET}:8112;
+        proxy_pass http://${PROXY_PASS_TARGET}:60001;
     }
 }
 
 server {
-    listen 60004;
+    listen 3022;
+    listen [::]:3022;
     server_name qbit;
 
     proxy_set_header Host $host;
@@ -130,5 +113,35 @@ server {
     location / {
         auth_basic off;
         proxy_pass http://${PROXY_PASS_TARGET}:20143;
+    }
+}
+
+server {
+    listen 3023;
+    listen [::]:3023;
+    server_name django;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    location / {
+        proxy_pass http://${PROXY_PASS_TARGET}:8000;
+    }
+}
+
+server {
+    listen 3024;
+    listen [::]:3024;
+    server_name portainer;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    location / {
+        proxy_pass http://${PROXY_PASS_TARGET}:9000;
     }
 }
