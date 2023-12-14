@@ -3,6 +3,7 @@ server {
     # Jellyfin
     listen 3020;
     listen [::]:3020;
+
     server_name jellyfin;
     ## The default `client_max_body_size` is 1M, this might not be enough for some posters, etc.
     client_max_body_size 20M;
