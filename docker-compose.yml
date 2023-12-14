@@ -5,7 +5,10 @@ services:
     container_name: docker-proxy
     restart: unless-stopped
     ports:
-      - "60000:60000"
-      - "60001:60001"
+      - "3020:3020" # Jellyfin
+      - "3021:3021" # Dashboard
+      - "3022:3022" # qBit
+      - "3023:3023" # Django
+      - "3024:3024" # Portainer
     environment:
       - PROXY_PASS_TARGET=192.168.178.33
